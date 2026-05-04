@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Abhishek's Tracker — Full Screen with Notes & Images</title>
+  <title>Abhishek's Tracker — Multiple Images Per Day</title>
   <style>
     * {
       box-sizing: border-box;
@@ -18,7 +18,6 @@
       overflow: hidden;
     }
 
-    /* Main App Container - Full Screen */
     .app-container {
       display: flex;
       flex-direction: row;
@@ -27,7 +26,6 @@
       gap: 0;
     }
 
-    /* Left Main Section */
     .main {
       flex: 2.5;
       display: flex;
@@ -37,7 +35,6 @@
       min-width: 0;
     }
 
-    /* Right Sidebar */
     .sidebar {
       flex: 1;
       display: flex;
@@ -52,7 +49,7 @@
 
     h1 {
       color: #1e2a3e;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       margin-bottom: 16px;
       flex-shrink: 0;
     }
@@ -92,17 +89,15 @@
       color: #2c3e50;
     }
 
-    /* Scrollable Calendar Grid */
     #date-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 16px;
       overflow-y: auto;
       padding: 4px 4px 8px 4px;
       flex: 1;
     }
 
-    /* Custom Scrollbar */
     #date-list::-webkit-scrollbar {
       width: 8px;
     }
@@ -174,51 +169,57 @@
       font-weight: 500;
     }
 
-    .image-preview {
+    /* Multiple Images Grid */
+    .images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 10px;
       margin: 12px 0;
+    }
+
+    .image-item {
       position: relative;
       display: inline-block;
-      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f1f5f9;
+      aspect-ratio: 1 / 1;
     }
 
-    .image-preview img {
+    .image-item img {
       width: 100%;
-      max-height: 150px;
+      height: 100%;
       object-fit: cover;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      transition: 0.15s;
       cursor: pointer;
+      transition: 0.15s;
     }
 
-    .image-preview img:hover {
-      transform: scale(1.01);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    .image-item img:hover {
+      transform: scale(1.05);
     }
 
-    .remove-img-btn {
+    .remove-single-img {
       position: absolute;
-      top: -10px;
-      right: -10px;
+      top: 4px;
+      right: 4px;
       background: #e74c3c;
       color: white;
       border: none;
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      font-size: 16px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      opacity: 0.9;
     }
 
-    .remove-img-btn:hover {
+    .remove-single-img:hover {
       background: #c0392b;
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
 
     .note-text {
@@ -289,7 +290,6 @@
 
     .reset-btn:hover {
       background: #a93226;
-      transform: scale(1.01);
     }
 
     .monthly-notes, .monthly-summary {
@@ -316,7 +316,6 @@
       font-size: 13px;
     }
 
-    /* LIGHTBOX MODAL */
     .lightbox {
       display: none;
       position: fixed;
@@ -342,7 +341,6 @@
       max-height: 90%;
       object-fit: contain;
       border-radius: 12px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.5);
     }
 
     .close-lightbox {
@@ -360,15 +358,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: 0.2s;
     }
 
     .close-lightbox:hover {
       background: rgba(255,255,255,0.2);
-      transform: scale(1.1);
     }
 
-    /* Responsive */
     @media (max-width: 900px) {
       .app-container {
         flex-direction: column;
@@ -396,7 +391,7 @@
 <body>
 <div class="app-container">
   <div class="main">
-    <h1>📅 Abhishek's Full-Screen Tracker</h1>
+    <h1>📅 Abhishek's Tracker — Multiple Images Per Day</h1>
 
     <div class="calendar-controls">
       <button class="month-btn" onclick="changeMonth(-1)">← Previous</button>
@@ -409,7 +404,7 @@
     <div class="earnings-section">
       <div id="month-total">📆 This Month: ₹0</div>
       <div id="lifetime-total">💼 Lifetime: ₹0</div>
-      <button class="reset-btn" onclick="resetProgress()">🗑 Reset All Data (work + notes + images)</button>
+      <button class="reset-btn" onclick="resetProgress()">🗑 Reset All Data</button>
     </div>
   </div>
 
@@ -418,7 +413,6 @@
       <h3>📝 Monthly Notes</h3>
       <textarea id="monthly-note" rows="5" placeholder="Write anything about this month..."></textarea>
     </div>
-
     <div class="monthly-summary">
       <h3>📊 Monthly Summary</h3>
       <textarea id="monthly-summary" rows="14" readonly></textarea>
@@ -426,7 +420,6 @@
   </div>
 </div>
 
-<!-- LIGHTBOX MODAL -->
 <div id="lightbox" class="lightbox" onclick="closeLightbox()">
   <div class="close-lightbox">&times;</div>
   <div class="lightbox-content">
@@ -444,7 +437,6 @@
   const monthTotalEl = document.getElementById('month-total');
   const lifetimeTotalEl = document.getElementById('lifetime-total');
 
-  // Lightbox functions
   function openLightbox(imageSrc) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
@@ -459,16 +451,16 @@
     document.body.style.overflow = 'auto';
   }
 
-  document.addEventListener('keydown', function(e) {
+  document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeLightbox();
   });
 
   function loadSavedData() {
-    return JSON.parse(localStorage.getItem('workDaysEnhanced')) || {};
+    return JSON.parse(localStorage.getItem('workDaysMultiImage')) || {};
   }
 
   function saveData(data) {
-    localStorage.setItem('workDaysEnhanced', JSON.stringify(data));
+    localStorage.setItem('workDaysMultiImage', JSON.stringify(data));
   }
 
   function getMonthKey() {
@@ -499,8 +491,8 @@
   }
 
   function resetProgress() {
-    if (confirm("⚠️ This will delete ALL work data, notes, images, and summaries. Cannot undo. Continue?")) {
-      localStorage.removeItem('workDaysEnhanced');
+    if (confirm("⚠️ This will delete ALL data (work, notes, images). Cannot undo!")) {
+      localStorage.removeItem('workDaysMultiImage');
       localStorage.removeItem(getMonthKey());
       for (let key in localStorage) {
         if (key.startsWith('summary-')) localStorage.removeItem(key);
@@ -542,9 +534,9 @@
 ✔ Work Days Completed: ${worked}
 📅 Sundays: ${sundays}
 🏖 Holidays (Unpaid): ${holidays}
-📊 Work days out of total working days: ${worked} / ${totalPotentialDays}
+📊 Work days: ${worked} / ${totalPotentialDays}
 ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\n- ') : ''}
-💰 Earnings this month: ₹${amount}
+💰 Earnings: ₹${amount}
 --------------------------------
 ✅ Payment expected between 7th-10th.`;
     const summaryBox = document.getElementById('monthly-summary');
@@ -559,8 +551,7 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
   }
 
   function addOrEditNote(dateKey, currentEntry, savedData) {
-    const currentNote = currentEntry.note || "";
-    const newNote = prompt("📝 Add / Edit note for this day:", currentNote);
+    const newNote = prompt("📝 Add / Edit note for this day:", currentEntry.note || "");
     if (newNote !== null) {
       currentEntry.note = newNote.trim();
       savedData[dateKey] = currentEntry;
@@ -569,33 +560,50 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
     }
   }
 
-  function uploadImage(dateKey, currentEntry, savedData) {
+  function uploadMultipleImages(dateKey, currentEntry, savedData) {
     const input = document.createElement('input');
     input.type = 'file';
+    input.multiple = true;
     input.accept = 'image/jpeg,image/png,image/gif,image/webp';
     input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (file.size > 2 * 1024 * 1024) {
-        alert("Image too large! Max 2MB per image (to keep storage safe).");
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        currentEntry.imageBase64 = ev.target.result;
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+      
+      // Initialize images array if not exists
+      if (!currentEntry.images) currentEntry.images = [];
+      
+      const readers = files.map(file => {
+        return new Promise((resolve, reject) => {
+          if (file.size > 2 * 1024 * 1024) {
+            alert(`Image ${file.name} is too large! Max 2MB.`);
+            resolve(null);
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (ev) => resolve(ev.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+      
+      Promise.all(readers).then(results => {
+        const validImages = results.filter(r => r !== null);
+        currentEntry.images.push(...validImages);
         savedData[dateKey] = currentEntry;
         saveData(savedData);
         renderCalendar();
-      };
-      reader.readAsDataURL(file);
+      });
     };
     input.click();
   }
 
-  function removeImage(dateKey, currentEntry, savedData, event) {
+  function removeSingleImage(dateKey, currentEntry, savedData, imageIndex, event) {
     event.stopPropagation();
     if (confirm("Remove this image?")) {
-      delete currentEntry.imageBase64;
+      currentEntry.images.splice(imageIndex, 1);
+      if (currentEntry.images.length === 0) {
+        delete currentEntry.images;
+      }
       savedData[dateKey] = currentEntry;
       saveData(savedData);
       renderCalendar();
@@ -614,7 +622,14 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
     for (let i = 1; i <= daysInMonth; i++) {
       const dateObj = new Date(year, month, i);
       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-      let entry = savedData[dateKey] || { completed: false, holiday: false, holidayReason: "", note: "", imageBase64: null };
+      let entry = savedData[dateKey] || { 
+        completed: false, 
+        holiday: false, 
+        holidayReason: "", 
+        note: "", 
+        images: [] 
+      };
+      if (!entry.images) entry.images = [];
       savedData[dateKey] = entry;
 
       const isHoliday = entry.holiday;
@@ -634,9 +649,9 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
       checkbox.className = 'checkbox';
       checkbox.checked = entry.completed;
       checkbox.disabled = isHoliday;
-      checkbox.title = isHoliday ? "Holiday - unpaid (cannot mark work)" : "Mark as completed workday";
+      checkbox.title = isHoliday ? "Holiday - unpaid" : "Mark as completed workday";
 
-      checkbox.addEventListener('change', (e) => {
+      checkbox.addEventListener('change', () => {
         entry.completed = checkbox.checked;
         savedData[dateKey] = entry;
         saveData(savedData);
@@ -677,29 +692,40 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
 
       card.appendChild(header);
 
-      if (entry.imageBase64) {
-        const imgContainer = document.createElement('div');
-        imgContainer.className = 'image-preview';
-        const img = document.createElement('img');
-        img.src = entry.imageBase64;
-        img.alt = "work evidence";
-        img.title = "Click to enlarge";
-        img.onclick = (e) => {
-          e.stopPropagation();
-          openLightbox(entry.imageBase64);
-        };
-        const removeImgBtn = document.createElement('button');
-        removeImgBtn.textContent = '✖';
-        removeImgBtn.className = 'remove-img-btn';
-        removeImgBtn.onclick = (e) => {
-          e.stopPropagation();
-          removeImage(dateKey, entry, savedData, e);
-        };
-        imgContainer.appendChild(img);
-        imgContainer.appendChild(removeImgBtn);
-        card.appendChild(imgContainer);
+      // MULTIPLE IMAGES GRID
+      if (entry.images && entry.images.length > 0) {
+        const imagesGrid = document.createElement('div');
+        imagesGrid.className = 'images-grid';
+        
+        entry.images.forEach((imgSrc, idx) => {
+          const imageItem = document.createElement('div');
+          imageItem.className = 'image-item';
+          
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = `Work image ${idx + 1}`;
+          img.title = "Click to enlarge";
+          img.onclick = (e) => {
+            e.stopPropagation();
+            openLightbox(imgSrc);
+          };
+          
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = '✖';
+          removeBtn.className = 'remove-single-img';
+          removeBtn.onclick = (e) => {
+            removeSingleImage(dateKey, entry, savedData, idx, e);
+          };
+          
+          imageItem.appendChild(img);
+          imageItem.appendChild(removeBtn);
+          imagesGrid.appendChild(imageItem);
+        });
+        
+        card.appendChild(imagesGrid);
       }
 
+      // NOTE DISPLAY
       if (entry.note && entry.note.trim() !== "") {
         const noteDiv = document.createElement('div');
         noteDiv.className = 'note-text';
@@ -707,6 +733,7 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
         card.appendChild(noteDiv);
       }
 
+      // ACTION BUTTONS
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'card-actions';
 
@@ -720,16 +747,17 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
 
       const imageBtn = document.createElement('button');
       imageBtn.className = 'small-btn';
-      imageBtn.innerHTML = entry.imageBase64 ? '🖼 Change Image' : '🖼 Add Image';
+      imageBtn.innerHTML = entry.images.length > 0 ? `🖼 + Add More (${entry.images.length})` : '🖼 Add Images';
       imageBtn.onclick = (e) => {
         e.stopPropagation();
-        uploadImage(dateKey, entry, savedData);
+        uploadMultipleImages(dateKey, entry, savedData);
       };
 
       actionsDiv.appendChild(noteBtn);
       actionsDiv.appendChild(imageBtn);
       card.appendChild(actionsDiv);
 
+      // RIGHT CLICK HOLIDAY
       card.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         if (entry.holiday) {
@@ -740,13 +768,9 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
           }
         } else {
           const reason = prompt(`Mark ${dateObj.toDateString()} as HOLIDAY (unpaid). Reason:`, "Off / Festival");
-          if (reason !== null && reason.trim() !== "") {
+          if (reason !== null) {
             entry.holiday = true;
-            entry.holidayReason = reason.trim();
-            entry.completed = false;
-          } else if (reason === "") {
-            entry.holiday = true;
-            entry.holidayReason = "Holiday";
+            entry.holidayReason = reason.trim() || "Holiday";
             entry.completed = false;
           }
         }
@@ -768,7 +792,7 @@ ${holidayDetails.length ? '\n📌 Holiday Details:\n- ' + holidayDetails.join('\
 
   function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
+    return str.replace(/[&<>]/g, (m) => {
       if (m === '&') return '&amp;';
       if (m === '<') return '&lt;';
       if (m === '>') return '&gt;';
